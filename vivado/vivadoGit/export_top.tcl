@@ -201,6 +201,14 @@ proc project_tcl { } {
   puts ${prj_tcl} "#  Synthesis config"
 #   puts ${prj_tcl} "set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects \[get_runs synth_1\]"
 #   puts ${prj_tcl} "set_property top ${g_top_name} \[get_filesets sources_1\]"
+
+  puts ${prj_tcl} "# Config tcl"
+  set list_files [glob -nocomplain ${g_dir_projConf}/*.tcl]
+  foreach file_path ${list_files} {
+    set rel_val [get_rel_path ${g_dir_projConf} ${g_dir_repo}]
+    set file_name [file tail ${file_path}]
+    puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
+  }
   
   puts ${prj_tcl} "# IP tcl"
   set rel_val [get_rel_path ${g_dir_repoIp} ${g_dir_repo}]
@@ -214,13 +222,6 @@ proc project_tcl { } {
     puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
   }
   
-  puts ${prj_tcl} "# Config tcl"
-  set list_files [glob -nocomplain ${g_dir_projConf}/*.tcl]
-  foreach file_path ${list_files} {
-    set rel_val [get_rel_path ${g_dir_projConf} ${g_dir_repo}]
-    set file_name [file tail ${file_path}]
-    puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
-  }
   close ${prj_tcl}
 }
 
