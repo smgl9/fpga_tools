@@ -124,6 +124,8 @@ proc project_tcl { } {
   variable g_default_lib
 
   set_system_variables
+  
+  set file_name_bd_top 0
 
   set v_file_top_tcl ${g_dir_repo}/${g_project_name}.tcl
   set prj_tcl [open "${v_file_top_tcl}" "w"]
@@ -223,12 +225,14 @@ proc project_tcl { } {
   }
   
   #top generation
+  puts ${prj_tcl} "# Project top"
   puts ${prj_tcl} "set_property top ${g_top_name} \[current_fileset\]"
   puts ${prj_tcl} "set project_top \[get_property top \[current_fileset\]\]"
-  puts ${prj_tcl} "if {!\[info exists \${project_top}\]} {
-    make_wrapper -files \[get_files \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
-    add_files -norecurse \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
-    
+  if {${file_name_bd_top} != 0} {
+    puts ${prj_tcl} "if {!\[info exists \${project_top}\]} {
+        make_wrapper -files \[get_files \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
+        add_files -norecurse \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
+    }
   close ${prj_tcl}
 }
 
