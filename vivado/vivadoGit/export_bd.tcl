@@ -37,6 +37,9 @@ proc bd_tcl {} {
   variable g_dir_repoBD
   set_system_variables
   set bds_files [get_files -filter {FILE_TYPE == "Block Designs"}]
+  if {[file isdirectory ${g_dir_repoBD}]} {
+    file delete -force ${g_dir_repoBD}
+  }
   file mkdir ${g_dir_repoBD}
   foreach bd_name ${bds_files} {
     open_bd_design ${bd_name}
