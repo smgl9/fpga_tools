@@ -186,7 +186,7 @@ proc project_tcl { } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets constrs_1\] \${script_dir}\/${rel_val}"
     }
   }
-
+  # DCP files
   set list_files [get_files -all -of [get_filesets {sources_1}] -filter {FILE_TYPE == "Design Checkpoint"}]
   puts ${prj_tcl} "# Design Checkpoint files"
   foreach file_path ${list_files} {
@@ -196,11 +196,10 @@ proc project_tcl { } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
-
+  
   # Config options
   puts ${prj_tcl} "#  Synthesis config"
 #   puts ${prj_tcl} "set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects \[get_runs synth_1\]"
-#   puts ${prj_tcl} "set_property top ${g_top_name} \[get_filesets sources_1\]"
 
   puts ${prj_tcl} "# Config tcl"
   set list_files [glob -nocomplain ${g_dir_projConf}/*.tcl]
@@ -219,9 +218,17 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${g_dir_repoBD} ${g_dir_repo}]
     set file_name [file tail ${file_path}]
+    set file_name_bd_top [file rootname ${file_name}]
     puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
   }
   
+  #top generation
+  puts ${prj_tcl} "set_property top ${g_top_name} \[current_fileset\]"
+  puts ${prj_tcl} "set project_top \[get_property top \[current_fileset\]\]"
+  puts ${prj_tcl} "if {!\[info exists \${project_top}\]} {
+    make_wrapper -files \[get_files \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
+    add_files -norecurse \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
+    
   close ${prj_tcl}
 }
 
