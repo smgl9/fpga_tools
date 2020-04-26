@@ -14,6 +14,10 @@ Run image
 ```
 sudo docker run -it terostech/multi-simulator:1.0.1 bash
 ```
+list images
+```
+docker images
+```
 list containers
 ```
 docker ps -aq
