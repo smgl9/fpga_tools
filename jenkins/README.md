@@ -48,3 +48,14 @@ sudo systemctl stop jenkins
 sudo systemctl disable jenkins
 sudo systemctl enable jenkins
 ```
+
+# Use ngrok
+
+In order to access to Jenkins server we use ngrok o something similar:
+https://ngrok.com/download
+
+```
+unzip /path/to/ngrok.zip
+./ngrok authtoken <YOUR_AUTH_TOKEN>
+./ngrok http 8080
+```
