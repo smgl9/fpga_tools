@@ -6,7 +6,8 @@ jobs:
   hello-job-docker:
     runs-on: self-hosted
     container:
-      image: docker://terostech/multi-simulator:1.0.1
+      using: 'docker'
+      image: terostech/multi-simulator:1.0.1
     steps:
       - name: Checkout Code
         uses: actions/checkout@v1
