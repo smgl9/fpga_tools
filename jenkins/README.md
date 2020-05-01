@@ -59,3 +59,9 @@ unzip /path/to/ngrok.zip
 ./ngrok authtoken <YOUR_AUTH_TOKEN>
 ./ngrok http 8080
 ```
+
+#GitHub weebhook
+
+```
+http://dddd.ngrok.io:8080/github-webhook
+```
