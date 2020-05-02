@@ -6,6 +6,7 @@ sudo apt install docker
 
 # Use
 
+## commands
 Pull image
 ```
 sudo docker pull terostech/multi-simulator:1.0.1
@@ -37,4 +38,9 @@ docker image prune -a
 Remove all stopped containers
 ```
 sudo docker container prune
+```
+
+## Add your user to the docker group.
+```
+sudo usermod -aG docker $USER
 ```
