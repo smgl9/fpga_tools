@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   hello-job-docker:
-    runs-on: self-hosted
+    runs-on: ubuntu-18.04
     container:
       image: docker://terostech/multi-simulator:1.0.1
     steps:
