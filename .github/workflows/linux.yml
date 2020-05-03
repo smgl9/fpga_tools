@@ -5,17 +5,14 @@ on: [push]
 jobs:
   hello-job-docker:
     runs-on: self-hosted
-    # container:
-    #   image: docker://terostech/multi-simulator:1.0.1
+    container:
+      image: docker://terostech/multi-simulator:1.0.1
     steps:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Test
-        uses: docker://terostech/multi-simulator:1.0.1
-      - name: echo
         run: |
-          echo "hello docker"
-
+          echo "hello"
   # ****************************************************************************
   # ****************************************************************************
   hello-native:
