@@ -3,18 +3,19 @@ name: Linux
 on: [push]
 
 jobs:
-  # hello-job-docker:
-  #   runs-on: ubuntu-18.04
-  #   container:
-  #     image: docker://terostech/multi-simulator:1.0.1
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v1
-  #     - name: Test
-  #       run: |
-  #         echo "hello"
-  # ****************************************************************************
-  # ****************************************************************************
+  hello-job-docker:
+    runs-on: self-hosted
+    # container:
+    #   image: docker://terostech/multi-simulator:1.0.1
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v1
+      - name: Test
+        uses: docker://terostech/multi-simulator:1.0.1
+        run: |
+          echo "hello docker"
+  ****************************************************************************
+  ****************************************************************************
   hello-native:
     runs-on: self-hosted
     steps:
