@@ -27,7 +27,7 @@ docker images
 ```
 list containers
 ```
-docker ps -aq
+docker ps -a
 ```
 stop coontainer
 ```
@@ -44,6 +44,14 @@ docker image prune -a
 Remove all stopped containers
 ```
 sudo docker container prune
+```
+docker save
+```
+docker save -o fedora-latest.tar fedora:latest
+```
+docker load
+```
+docker load --input fedora.tar
 ```
 
 ## Add your user to the docker group.
