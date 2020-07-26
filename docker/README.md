@@ -7,6 +7,12 @@ sudo apt install docker
 # Use
 
 ## commands
+
+build image with tag
+```
+docker build -t vieux/apache:2.0 .
+```
+
 Pull image
 ```
 sudo docker pull terostech/multi-simulator:1.0.1
