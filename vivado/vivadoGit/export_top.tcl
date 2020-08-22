@@ -28,6 +28,7 @@ proc set_system_variables {} {
   variable g_dir_repoIp
   variable g_dir_project_BD
   variable g_dir_projConf
+  variable g_dir_ipRepos
 
   variable g_current_project
   variable g_project_name
@@ -47,6 +48,7 @@ proc set_system_variables {} {
   set g_dir_repoBD ${g_dir_repoSrc}/bd
   set g_dir_repoIp ${g_dir_repoSrc}/ip
   set g_dir_projConf ${g_dir_repoSrc}/config
+  set g_dir_ipRepos [get_property ip_repo_paths [current_project ]]
 
   set g_current_project [current_project]
   set g_project_name [get_property -name "name" -object ${g_current_project}]
@@ -116,6 +118,7 @@ proc project_tcl { } {
   variable g_dir_repoBD
   variable g_dir_repoIp
   variable g_dir_projConf
+  variable g_dir_ipRepos
   
   variable g_project_name
   variable g_top_name
@@ -198,6 +201,15 @@ proc project_tcl { } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
+  
+  # Set repositories.
+  puts ${prj_tcl} "#  Set Repository"
+  
+  foreach file_path ${g_dir_ipRepos} {
+    set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
+    puts ${prj_tcl} "set_property  ip_repo_paths  \${script_dir}\/${rel_val} \[current_project\]"
+  }
+  puts ${prj_tcl} "update_ip_catalog -rebuild"
   
   # Config options
   puts ${prj_tcl} "#  Synthesis config"

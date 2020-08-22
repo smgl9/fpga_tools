@@ -1,7 +1,7 @@
 # Installation
 
 ```
-sudo sh ./install.sh  /opt/Xilinx/Vivado/2018.3/scripts/
+sudo sh ./install.sh  /tools/Xilinx/Vivado/2019.2/scripts/
 ```
 
 # Use
