@@ -62,6 +62,7 @@ proc ip_tcl {} {
       }
     }
     puts ${ips_tcl} "  \] \[get_ips \${ip_name}\]"
+    puts ${ips_tcl} "set_property generate_synth_checkpoint 0 \[get_files ${ip_name}.xci\]"
     puts ${ips_tcl} "#  ${ip_def_name}  "
     puts ${ips_tcl} ""
   }
