@@ -7,6 +7,12 @@ sudo apt install docker
 # Use
 
 ## commands
+
+build image with tag
+```
+docker build -t vieux/apache:2.0 .
+```
+
 Pull image
 ```
 sudo docker pull terostech/multi-simulator:1.0.1
@@ -21,7 +27,7 @@ docker images
 ```
 list containers
 ```
-docker ps -aq
+docker ps -a
 ```
 stop coontainer
 ```
@@ -38,6 +44,14 @@ docker image prune -a
 Remove all stopped containers
 ```
 sudo docker container prune
+```
+docker save
+```
+docker save -o fedora-latest.tar fedora:latest
+```
+docker load
+```
+docker load --input fedora.tar
 ```
 
 ## Add your user to the docker group.
