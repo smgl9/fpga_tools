@@ -29,6 +29,7 @@ proc set_system_variables {} {
   variable g_dir_project_BD
   variable g_dir_projConf
   variable g_dir_ipRepos
+  variable g_vivado_prjFolder
 
   variable g_current_project
   variable g_project_name
@@ -49,6 +50,7 @@ proc set_system_variables {} {
   set g_dir_repoIp ${g_dir_repoSrc}/ip
   set g_dir_projConf ${g_dir_repoSrc}/config
   set g_dir_ipRepos [get_property ip_repo_paths [current_project ]]
+  set g_vivado_prjFolder "vivado_prj"
 
   set g_current_project [current_project]
   set g_project_name [get_property -name "name" -object ${g_current_project}]
@@ -119,6 +121,7 @@ proc project_tcl { } {
   variable g_dir_repoIp
   variable g_dir_projConf
   variable g_dir_ipRepos
+  variable g_vivado_prjFolder
   
   variable g_project_name
   variable g_top_name
@@ -129,16 +132,17 @@ proc project_tcl { } {
   set_system_variables
   
   set file_name_bd_top 0
-
+  
   set v_file_top_tcl ${g_dir_repo}/${g_project_name}.tcl
   set prj_tcl [open "${v_file_top_tcl}" "w"]
   
   puts ${prj_tcl} "# Init Project "
   puts ${prj_tcl} "set script_path \[file normalize \[info script\]\]"
   puts ${prj_tcl} "set script_dir \[file dirname \${script_path}\]"
+  puts ${prj_tcl} "set ${g_vivado_prjFolder} \[file dirname \${script_path}\]"
 
-  puts ${prj_tcl} "file mkdir \${script_dir}/vivado_prj"
-  puts ${prj_tcl} "create_project ${g_project_name} \${script_dir}/vivado_prj -force"
+  puts ${prj_tcl} "file mkdir \${script_dir}/${g_vivado_prjFolder}"
+  puts ${prj_tcl} "create_project ${g_project_name} \${script_dir}/${g_vivado_prjFolder} -force"
 
   puts ${prj_tcl} "# Properties "
   puts ${prj_tcl} "set_property target_language ${g_target_language} \[current_project\]"
@@ -154,7 +158,7 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
     set file_split [file split ${rel_val}]
-    if { ([lindex ${file_split} 0] != "vivado_prj") } {
+    if { ([lindex ${file_split} 0] != ${g_vivado_prjFolder}) } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
@@ -165,7 +169,7 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
     set file_split [file split ${rel_val}]
-    if { ([lindex ${file_split} 0] != "vivado_prj") } {
+    if { ([lindex ${file_split} 0] != ${g_vivado_prjFolder}) } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
@@ -176,7 +180,7 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
     set file_split [file split ${rel_val}]
-    if { ([lindex ${file_split} 0] != "vivado_prj") } {
+    if { ([lindex ${file_split} 0] != ${g_vivado_prjFolder}) } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
@@ -187,7 +191,7 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
     set file_split [file split ${rel_val}]
-    if { ([lindex ${file_split} 0] != "vivado_prj") } {
+    if { ([lindex ${file_split} 0] != ${g_vivado_prjFolder}) } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets constrs_1\] \${script_dir}\/${rel_val}"
     }
   }
@@ -197,7 +201,7 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${file_path} ${g_dir_repo}]
     set file_split [file split ${rel_val}]
-    if { ([lindex ${file_split} 0] != "vivado_prj") } {
+    if { ([lindex ${file_split} 0] != ${g_vivado_prjFolder}) } {
       puts ${prj_tcl} "add_files -fileset \[get_filesets sources_1\] \${script_dir}\/${rel_val}"
     }
   }
@@ -242,8 +246,8 @@ proc project_tcl { } {
   puts ${prj_tcl} "set project_top \[get_property top \[current_fileset\]\]"
   if {${file_name_bd_top} != 0} {
     puts ${prj_tcl} "if {!\[info exists \${project_top}\]} {
-        make_wrapper -files \[get_files \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
-        add_files -norecurse \${script_dir}/vivado_prj/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
+        make_wrapper -files \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
+        add_files -norecurse \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
     }
   close ${prj_tcl}
 }
