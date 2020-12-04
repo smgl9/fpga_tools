@@ -10,7 +10,7 @@ sh ./Xilinx_Unified_2020.1_0602_1208_Lin64.bin --keep --noexec --target ./
 ```
 ./xsetup -b ConfigGen
 nano ~/.Xilinx/install_config.txt
-./xsetup -b Install -a XilinxEULA,3rdPartyEULA,WebTalkTerms -c ~/.Xilinx/install_config.txt
+sudo ./xsetup -b Install -a XilinxEULA,3rdPartyEULA,WebTalkTerms -c ~/.Xilinx/install_config.txt
 ```
 
 # VivadoGit
