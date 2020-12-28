@@ -12,9 +12,6 @@
 ```
 4. installation
 ```
-./xsetup -b ConfigGen
-```
-```
 sudo ./xsetup --batch Install --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --config "~/.Xilinx/install_config.txt"
 ```
 
