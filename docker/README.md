@@ -53,6 +53,10 @@ docker load
 ```
 docker load --input fedora.tar
 ```
+mount a volume
+```
+docker run -v /home/user/mydata:/home/mydata anyimage:1.0
+```
 
 ## Add your user to the docker group.
 ```
