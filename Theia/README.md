@@ -39,7 +39,7 @@ sudo apt install yarn
 ```bash
 yarn
 yarn theia build
-yarn start
+yarn theia start
 ```
 or
  ```

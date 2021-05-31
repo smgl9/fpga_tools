@@ -37,6 +37,10 @@ Remove all unused objects
 ```
 docker system prune
 ```
+Remove images
+```
+docker image rm IMAGE_ID
+```
 Remove all unused images
 ```
 docker image prune -a
@@ -56,6 +60,10 @@ docker load --input fedora.tar
 mount a volume
 ```
 docker run -v /home/user/mydata:/home/mydata anyimage:1.0
+```
+docker commit changes
+```
+sudo docker commit [CONTAINER_ID] [new_image_name]
 ```
 
 ## Add your user to the docker group.

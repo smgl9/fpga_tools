@@ -13,3 +13,13 @@ In tcl console:
 fpga_tools::vivado_tcl
 ```
 
+# Rebuild project
+
+GUI:
+```
+vivado -> tools -> Run tcl script -> project.tcl
+```
+CLI:
+```
+vivado -mode batch –source project.tcl
+```

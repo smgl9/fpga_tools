@@ -65,3 +65,13 @@ unzip /path/to/ngrok.zip
 ```
 http://dddd.ngrok.io:8080/github-webhook
 ```
+# Vivado Docker in Jenkins
+
+```
+agent {
+    docker {
+        image 'vivado:2019.2'
+        args '--init'
+    }
+}
+```
