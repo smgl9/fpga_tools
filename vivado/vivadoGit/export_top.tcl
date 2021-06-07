@@ -1,4 +1,4 @@
-# Copyright 2020
+# Copyright 2021
 # Ismael Pérez Rojo (ismaelprojo@gmail.com)
 #
 # This file is part of FPGA_tools.
@@ -132,7 +132,7 @@ proc project_tcl { } {
   set_system_variables
   
   set file_name_bd_top 0
-  
+
   set v_file_top_tcl ${g_dir_repo}/${g_project_name}.tcl
   set prj_tcl [open "${v_file_top_tcl}" "w"]
   
@@ -215,9 +215,6 @@ proc project_tcl { } {
   }
   puts ${prj_tcl} "update_ip_catalog -rebuild"
   
-  # Config options
-  puts ${prj_tcl} "#  Synthesis config"
-#   puts ${prj_tcl} "set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects \[get_runs synth_1\]"
 
   puts ${prj_tcl} "# Config tcl"
   set list_files [glob -nocomplain ${g_dir_projConf}/*.tcl]
@@ -249,6 +246,13 @@ proc project_tcl { } {
         make_wrapper -files \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\] -top
         add_files -norecurse \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
     }
+
+  # Config options
+  set g_synth_ooc [get_property synth_checkpoint_mode [get_files  ${g_dir_repo}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd]]
+  puts ${prj_tcl} "#  Synthesis config"
+  puts ${prj_tcl} "set_property synth_checkpoint_mode ${g_synth_ooc} \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\]"
+#   puts ${prj_tcl} "set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects \[get_runs synth_1\]"
+
   close ${prj_tcl}
 }
 
