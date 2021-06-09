@@ -68,5 +68,6 @@ sudo docker commit [CONTAINER_ID] [new_image_name]
 
 ## Add your user to the docker group.
 ```
+groupadd docker
 sudo usermod -aG docker $USER
 ```
