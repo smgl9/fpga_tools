@@ -28,3 +28,13 @@ sh ./Xilinx_Unified_2020.1_0602_1208_Lin64.bin --keep --noexec --target ./
 nano ~/.Xilinx/install_config.txt
 sudo ./xsetup -b Install -a XilinxEULA,3rdPartyEULA,WebTalkTerms -c ~/.Xilinx/install_config.txt
 ```
+
+# Unattender hw_server installation
+
+```
+tar xzf Xilinx_HW_Server_Lin_2018.2_0614_1954.tar.gz
+cd Xilinx_HW_Server_Lin_2018.2_0614_1954
+sudo ./xsetup -b ConfigGen
+#Edit the generated install_config.txt and after that:
+sudo ./xsetup -a XilinxEULA,3rdPartyEULA,WebTalkTerms -b Install -c /root/.Xilinx/install_config.txt
+```
