@@ -11,6 +11,7 @@ sudo apt install docker
 build image with tag
 ```
 docker build -t vieux/apache:2.0 .
+docker build -t vieux/apache:2.0 . -f - < vieux.dockerfile
 ```
 
 Pull image
