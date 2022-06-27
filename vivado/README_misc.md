@@ -46,3 +46,7 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 ```
 
+# vivado locale
+
+export LC_ALL=en_US.UTF-8
+

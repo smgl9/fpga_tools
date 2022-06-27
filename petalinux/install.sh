@@ -21,6 +21,7 @@ apt-get update &&  DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
   libglib2.0-dev \
   lib32z1-dev \
   libgtk2.0-0 \
+  xxd \
   screen \
   pax \
   diffstat \
@@ -59,7 +60,7 @@ sudo dpkg-reconfigure dash
 
 mkdir -p /tools/Xilinx
 chmod 777 /tools/Xilinx
-chmod +x petalinux-v2019.2-final-installer.run
+chmod +x petalinux-v2021.2-final-installer.run
 
 echo "export LC_ALL en_US.UTF-8" >> /home/.bashrc
 echo "export LANG en_US.UTF-8" >> /home/.bashrc
