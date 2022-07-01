@@ -22,6 +22,7 @@ apt-get update &&  DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
   lib32z1-dev \
   libgtk2.0-0 \
   xxd \
+  libidn11 \
   screen \
   pax \
   diffstat \
