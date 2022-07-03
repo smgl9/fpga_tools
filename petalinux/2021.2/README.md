@@ -20,7 +20,8 @@ docker run -ti --rm -e DISPLAY=$DISPLAY --net="host" --user $(id -u):$(id -g) -v
 
 Basic flow to build a proyect
 ```
-petalinux-create --type project --template zynq --name project_name
+petalinux-create --type project --template zynq --name project_name -s system_base.bsp
+petalinux-create -t project --template zynqMP -n project_name -s system_base.bsp
 ```
 ```
 cd project_name
@@ -31,10 +32,17 @@ petalinux-config --get-hw-description path_to_xsa_file
 ```
 petalinux-build
 ```
-Building images with files from default paths. 
+Building images with files from default paths or custom paths. 
 ```
 petalinux-package --boot --fsbl  --fpga  --u-boot
+petalinux-package --boot --fsbl zynqmp_fsbl.elf --u-boot u-boot.elf --pmufw pmufw.elf --fpga system.bit --force
 ```
+Generate BSP.
+```
+petalinux-build -x mrproper
+petalinux-package --bsp -p . --output ../petalinux_bsp.bsp
+```
+
 ### Ubuntu rootfs
 
 https://highlevel-synthesis.com/2019/12/15/running-ubuntu-on-ultra96v2-using-petalinux-2019-2-with-networking-and-linux-header/
