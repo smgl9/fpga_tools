@@ -1,4 +1,4 @@
-# Copyright 2021
+# Copyright 2023
 # Ismael Pérez Rojo (ismaelprojo@gmail.com)
 #
 # This file is part of FPGA_tools.
@@ -126,6 +126,7 @@ proc project_tcl { } {
   variable g_project_name
   variable g_top_name
   variable g_part
+  variable g_board_part
   variable g_target_language
   variable g_default_lib
 
@@ -147,8 +148,12 @@ proc project_tcl { } {
   puts ${prj_tcl} "# Properties "
   puts ${prj_tcl} "set_property target_language ${g_target_language} \[current_project\]"
   puts ${prj_tcl} "set_property default_lib ${g_default_lib} \[current_project\]"
-  puts ${prj_tcl} "set_property part ${g_part} \[current_project\]"
-
+  if {[string trim $g_board_part] != ""} {
+    puts ${prj_tcl} "set_property board_part ${g_board_part} \[current_project\]"  
+    } else {
+      puts ${prj_tcl} "set_property part ${g_part} \[current_project\]"
+    }
+  
   puts ${prj_tcl} "# Sources"
   puts ${prj_tcl} "update_compile_order -fileset \[get_filesets sources_1\]"
   puts ${prj_tcl} "remove_files \[get_files -filter {IS_AUTO_DISABLED}\]"
