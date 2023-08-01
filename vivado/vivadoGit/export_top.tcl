@@ -1,4 +1,4 @@
-# Copyright 2023
+# Copyright 2021
 # Ismael Pérez Rojo (ismaelprojo@gmail.com)
 #
 # This file is part of FPGA_tools.
@@ -28,6 +28,8 @@ proc set_system_variables {} {
   variable g_dir_repoIp
   variable g_dir_project_BD
   variable g_dir_projConf
+  variable g_dir_projImpl
+  variable g_dir_projPR
   variable g_dir_ipRepos
   variable g_vivado_prjFolder
 
@@ -49,6 +51,8 @@ proc set_system_variables {} {
   set g_dir_repoBD ${g_dir_repoSrc}/bd
   set g_dir_repoIp ${g_dir_repoSrc}/ip
   set g_dir_projConf ${g_dir_repoSrc}/config
+  set g_dir_projImpl ${g_dir_repoSrc}/impl
+  set g_dir_projPR ${g_dir_repoSrc}/pr
   set g_dir_ipRepos [get_property ip_repo_paths [current_project ]]
   set g_vivado_prjFolder "vivado_prj"
 
@@ -120,6 +124,8 @@ proc project_tcl { } {
   variable g_dir_repoBD
   variable g_dir_repoIp
   variable g_dir_projConf
+  variable g_dir_projImpl
+  variable g_dir_projPR
   variable g_dir_ipRepos
   variable g_vivado_prjFolder
   
@@ -154,6 +160,7 @@ proc project_tcl { } {
       puts ${prj_tcl} "set_property part ${g_part} \[current_project\]"
     }
   
+
   puts ${prj_tcl} "# Sources"
   puts ${prj_tcl} "update_compile_order -fileset \[get_filesets sources_1\]"
   puts ${prj_tcl} "remove_files \[get_files -filter {IS_AUTO_DISABLED}\]"
@@ -220,7 +227,7 @@ proc project_tcl { } {
   }
   puts ${prj_tcl} "update_ip_catalog -rebuild"
   
-
+  # Add extra tcl script
   puts ${prj_tcl} "# Config tcl"
   set list_files [glob -nocomplain ${g_dir_projConf}/*.tcl]
   foreach file_path ${list_files} {
@@ -238,8 +245,17 @@ proc project_tcl { } {
   foreach file_path ${list_files} {
     set rel_val [get_rel_path ${g_dir_repoBD} ${g_dir_repo}]
     set file_name [file tail ${file_path}]
-    set file_name_bd_top [file rootname ${file_name}]
-    puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
+    set bd_name [file rootname $file_name]
+    set bd_wrapper ${bd_name}_wrapper
+    if { ${bd_wrapper} eq ${g_top_name} } {
+        set file_name_bd_top ${bd_name}
+    } else {
+        puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
+    }
+  }
+  # Top BD is the last to load
+  if {${file_name_bd_top} != 0} {
+    puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name_bd_top}.tcl"
   }
   
   #top generation
@@ -252,12 +268,50 @@ proc project_tcl { } {
         add_files -norecurse \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/hdl/${file_name_bd_top}_wrapper.vhd}"
     }
 
-  # Config options
-  set g_synth_ooc [get_property synth_checkpoint_mode [get_files  ${g_dir_repo}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd]]
-  puts ${prj_tcl} "#  Synthesis config"
-  puts ${prj_tcl} "set_property synth_checkpoint_mode ${g_synth_ooc} \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\]"
+  # Config options per BD
+  set list_files [glob -nocomplain ${g_dir_repoBD}/*.tcl]
+  foreach file_path ${list_files} {
+    set rel_val [get_rel_path ${g_dir_repoBD} ${g_dir_repo}]
+    set file_name [file tail ${file_path}]
+    set bd_name [file rootname $file_name]
+    set g_synth_ooc [get_property synth_checkpoint_mode [get_files  ${g_dir_repo}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${bd_name}/${bd_name}.bd]]
+    puts ${prj_tcl} "#  Synthesis config for ${bd_name} block design"
+    puts ${prj_tcl} "set_property synth_checkpoint_mode ${g_synth_ooc} \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${bd_name}/${bd_name}.bd\]"
 #   puts ${prj_tcl} "set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects \[get_runs synth_1\]"
-
+    }
+  
+    # Set DXF configuration if vivado supports it.
+    set vivado_version_text [version]
+    set vivado_version [string map {"." ""} [string range $vivado_version_text 8 13]]
+    if {${vivado_version} >= 20211} {
+        set pr_flow_config [get_property PR_FLOW [current_project]]
+        if {${pr_flow_config} == 1} {
+            puts ${prj_tcl} "# PR flow config"
+            puts ${prj_tcl} "set_property PR_FLOW ${pr_flow_config} \[current_project\]"
+            puts ${prj_tcl} "open_bd_design {\[\${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\]}"
+            # add partial reconfiguration script.
+            puts ${prj_tcl} "# Partial reconfiguration tcl"
+            set list_files [glob -nocomplain ${g_dir_projPR}/*.tcl]
+            foreach file_path ${list_files} {
+                set rel_val [get_rel_path ${g_dir_projPR} ${g_dir_repo}]
+                set file_name [file tail ${file_path}]
+                puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
+            }
+            puts ${prj_tcl} "validate_bd_design"
+            puts ${prj_tcl} "save_bd_design"
+            puts ${prj_tcl} "generate_target all \[get_files \${script_dir}/${g_vivado_prjFolder}/${g_project_name}.srcs/sources_1/bd/${file_name_bd_top}/${file_name_bd_top}.bd\]"
+        }
+    }
+    
+  # Add extra tcl script. Post-configuration/implementation script.
+  puts ${prj_tcl} "# Implementation tcl"
+  set list_files [glob -nocomplain ${g_dir_projImpl}/*.tcl]
+  foreach file_path ${list_files} {
+    set rel_val [get_rel_path ${g_dir_projImpl} ${g_dir_repo}]
+    set file_name [file tail ${file_path}]
+    puts ${prj_tcl} "source \${script_dir}\/${rel_val}/${file_name}"
+  }
+  
   close ${prj_tcl}
 }
 
